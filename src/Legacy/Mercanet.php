@@ -12,90 +12,32 @@ namespace Waaz\EtransactionsPlugin\Legacy;
  */
 class Mercanet
 {
-    const TEST = "https://payment-webinit-mercanet.test.sips-atos.com/rs-services/v2/paymentInit";
-    const SIMULATION = "https://payment-webinit.simu.mercanet.bnpparibas.net/rs-services/v2/paymentInit";
-    const PRODUCTION = "https://payment-webinit.mercanet.bnpparibas.net/rs-services/v2/paymentInit";
+    public const TEST = "https://payment-webinit-mercanet.test.sips-atos.com/rs-services/v2/paymentInit";
+    public const SIMULATION = "https://payment-webinit.simu.mercanet.bnpparibas.net/rs-services/v2/paymentInit";
+    public const PRODUCTION = "https://payment-webinit.mercanet.bnpparibas.net/rs-services/v2/paymentInit";
 
-    const INTERFACE_VERSION = "IR_WS_2.17";
-    const INSTALMENT = "INSTALMENT";
+    public const INTERFACE_VERSION = "IR_WS_2.17";
+    public const INSTALMENT = "INSTALMENT";
 
     // BYPASS3DS
-    const BYPASS3DS_ALL = "ALL";
-    const BYPASS3DS_MERCHANTWALLET = "MERCHANTWALLET";
+    public const BYPASS3DS_ALL = "ALL";
+    public const BYPASS3DS_MERCHANTWALLET = "MERCHANTWALLET";
 
-    private $brandsmap = array(
-        'ACCEPTGIRO' => 'CREDIT_TRANSFER',
-        'AMEX' => 'CARD',
-        'BCMC' => 'CARD',
-        'BUYSTER' => 'CARD',
-        'BANK CARD' => 'CARD',
-        'CB' => 'CARD',
-        'IDEAL' => 'CREDIT_TRANSFER',
-        'INCASSO' => 'DIRECT_DEBIT',
-        'MAESTRO' => 'CARD',
-        'MASTERCARD' => 'CARD',
-        'MASTERPASS' => 'CARD',
-        'MINITIX' => 'OTHER',
-        'NETBANKING' => 'CREDIT_TRANSFER',
-        'PAYPAL' => 'CARD',
-        'PAYLIB' => 'CARD',
-        'REFUND' => 'OTHER',
-        'SDD' => 'DIRECT_DEBIT',
-        'SOFORT' => 'CREDIT_TRANSFER',
-        'VISA' => 'CARD',
-        'VPAY' => 'CARD',
-        'VISA ELECTRON' => 'CARD',
-        'CBCONLINE' => 'CREDIT_TRANSFER',
-        'KBCONLINE' => 'CREDIT_TRANSFER'
-    );
-
-    /** @var ShaComposer */
-    private $secretKey;
+    private array $brandsmap = ['ACCEPTGIRO' => 'CREDIT_TRANSFER', 'AMEX' => 'CARD', 'BCMC' => 'CARD', 'BUYSTER' => 'CARD', 'BANK CARD' => 'CARD', 'CB' => 'CARD', 'IDEAL' => 'CREDIT_TRANSFER', 'INCASSO' => 'DIRECT_DEBIT', 'MAESTRO' => 'CARD', 'MASTERCARD' => 'CARD', 'MASTERPASS' => 'CARD', 'MINITIX' => 'OTHER', 'NETBANKING' => 'CREDIT_TRANSFER', 'PAYPAL' => 'CARD', 'PAYLIB' => 'CARD', 'REFUND' => 'OTHER', 'SDD' => 'DIRECT_DEBIT', 'SOFORT' => 'CREDIT_TRANSFER', 'VISA' => 'CARD', 'VPAY' => 'CARD', 'VISA ELECTRON' => 'CARD', 'CBCONLINE' => 'CREDIT_TRANSFER', 'KBCONLINE' => 'CREDIT_TRANSFER'];
 
     private $pspURL = self::TEST;
 
     private $responseData;
 
-    private $parameters = array();
+    private array $parameters = [];
 
-    private $pspFields = array(
-        'amount', 'cardExpiryDate', 'cardNumber', 'cardCSCValue',
-        'currencyCode', 'merchantId', 'interfaceVersion', 'sealAlgorithm',
-        'transactionReference', 'keyVersion', 'paymentMeanBrand', 'customerLanguage',
-        'billingAddress.city', 'billingAddress.company', 'billingAddress.country',
-        'billingAddress', 'billingAddress.postBox', 'billingAddress.state',
-        'billingAddress.street', 'billingAddress.streetNumber', 'billingAddress.zipCode',
-        'billingContact.email', 'billingContact.firstname', 'billingContact.gender',
-        'billingContact.lastname', 'billingContact.mobile', 'billingContact.phone',
-        'customerAddress', 'customerAddress.city', 'customerAddress.company',
-        'customerAddress.country', 'customerAddress.postBox', 'customerAddress.state',
-        'customerAddress.street', 'customerAddress.streetNumber', 'customerAddress.zipCode',
-        'customerEmail', 'customerContact', 'customerContact.email', 'customerContact.firstname',
-        'customerContact.gender', 'customerContact.lastname', 'customerContact.mobile',
-        'customerContact.phone', 'customerContact.title', 'expirationDate', 'automaticResponseUrl',
-        'templateName', 'paymentMeanBrandList', 'instalmentData.number', 'instalmentData.datesList',
-        'instalmentData.transactionReferencesList', 'instalmentData.amountsList', 'paymentPattern',
-        'captureDay', 'captureMode', 'merchantTransactionDateTime', 'fraudData.bypass3DS', 'seal',
-        'orderChannel', 'orderId', 'returnContext', 'transactionOrigin', 'merchantWalletId', 'paymentMeanId'
-    );
+    private array $pspFields = ['amount', 'cardExpiryDate', 'cardNumber', 'cardCSCValue', 'currencyCode', 'merchantId', 'interfaceVersion', 'sealAlgorithm', 'transactionReference', 'keyVersion', 'paymentMeanBrand', 'customerLanguage', 'billingAddress.city', 'billingAddress.company', 'billingAddress.country', 'billingAddress', 'billingAddress.postBox', 'billingAddress.state', 'billingAddress.street', 'billingAddress.streetNumber', 'billingAddress.zipCode', 'billingContact.email', 'billingContact.firstname', 'billingContact.gender', 'billingContact.lastname', 'billingContact.mobile', 'billingContact.phone', 'customerAddress', 'customerAddress.city', 'customerAddress.company', 'customerAddress.country', 'customerAddress.postBox', 'customerAddress.state', 'customerAddress.street', 'customerAddress.streetNumber', 'customerAddress.zipCode', 'customerEmail', 'customerContact', 'customerContact.email', 'customerContact.firstname', 'customerContact.gender', 'customerContact.lastname', 'customerContact.mobile', 'customerContact.phone', 'customerContact.title', 'expirationDate', 'automaticResponseUrl', 'templateName', 'paymentMeanBrandList', 'instalmentData.number', 'instalmentData.datesList', 'instalmentData.transactionReferencesList', 'instalmentData.amountsList', 'paymentPattern', 'captureDay', 'captureMode', 'merchantTransactionDateTime', 'fraudData.bypass3DS', 'seal', 'orderChannel', 'orderId', 'returnContext', 'transactionOrigin', 'merchantWalletId', 'paymentMeanId'];
 
-    private $requiredFields = array(
-        'amount', 'currencyCode', 'interfaceVersion', 'keyVersion', 'merchantId', 'normalReturnUrl', 'orderChannel',
-        'transactionReference'
-    );
+    private array $requiredFields = ['amount', 'currencyCode', 'interfaceVersion', 'keyVersion', 'merchantId', 'normalReturnUrl', 'orderChannel', 'transactionReference'];
 
-    public $allowedlanguages = array(
-        'nl', 'fr', 'de', 'it', 'es', 'cy', 'en'
-    );
+    public $allowedlanguages = ['nl', 'fr', 'de', 'it', 'es', 'cy', 'en'];
 
-    private static $currencies = array(
-        'EUR' => '978', 'USD' => '840', 'CHF' => '756', 'GBP' => '826',
-        'CAD' => '124', 'JPY' => '392', 'MXP' => '484', 'TRY' => '949',
-        'AUD' => '036', 'NZD' => '554', 'NOK' => '578', 'BRC' => '986',
-        'ARP' => '032', 'KHR' => '116', 'TWD' => '901', 'SEK' => '752',
-        'DKK' => '208', 'KRW' => '410', 'SGD' => '702', 'XPF' => '953',
-        'XOF' => '952'
-    );
+    private static array $currencies = ['EUR' => '978', 'USD' => '840', 'CHF' => '756', 'GBP' => '826', 'CAD' => '124', 'JPY' => '392', 'MXP' => '484', 'TRY' => '949', 'AUD' => '036', 'NZD' => '554', 'NOK' => '578', 'BRC' => '986', 'ARP' => '032', 'KHR' => '116', 'TWD' => '901', 'SEK' => '752', 'DKK' => '208', 'KRW' => '410', 'SGD' => '702', 'XPF' => '953', 'XOF' => '952'];
 
     public static function convertCurrencyToCurrencyCode($currency)
     {
@@ -116,9 +58,11 @@ class Mercanet
         return self::$currencies;
     }
 
-    public function __construct($secret)
+    /**
+     * @param ShaComposer $secret
+     */
+    public function __construct(private $secretKey)
     {
-        $this->secretKey = $secret;
     }
 
     public function shaCompose(array $parameters)
@@ -288,12 +232,12 @@ class Mercanet
 
     public function setBillingContactFirstname($firstname)
     {
-        $this->parameters['billingContact.firstname'] = str_replace(array("'", '"'), '', \Normalizer::normalize($firstname)); // replace quotes
+        $this->parameters['billingContact.firstname'] = str_replace(["'", '"'], '', \Normalizer::normalize($firstname)); // replace quotes
     }
 
     public function setBillingContactLastname($lastname)
     {
-        $this->parameters['billingContact.lastname'] = str_replace(array("'", '"'), '', \Normalizer::normalize($lastname)); // replace quotes
+        $this->parameters['billingContact.lastname'] = str_replace(["'", '"'], '', \Normalizer::normalize($lastname)); // replace quotes
     }
 
     public function setCaptureDay($number)
@@ -482,7 +426,7 @@ class Mercanet
         ksort($this->parameters);
 
         $dataName = "";
-        $parameterArray = array();
+        $parameterArray = [];
         $chaine = '{';
         foreach ($this->parameters as $key => $val) {
             $dataArray = explode(".", $key);
@@ -494,10 +438,10 @@ class Mercanet
                         if (strlen($chaine) != 1) {
                             $chaine .= ",";
                         }
-                        $chaine .= '"' . $dataName . '":' . json_encode($parameterArray);
+                        $chaine .= '"' . $dataName . '":' . json_encode($parameterArray, JSON_THROW_ON_ERROR);
                     }
                     unset($parameterArray);
-                    $parameterArray = array();
+                    $parameterArray = [];
                     $dataName = $dataArray[0];
                     $parameterArray[$dataArray[1]] = $val;
                 }
@@ -506,7 +450,7 @@ class Mercanet
                     if (strlen($chaine) != 1) {
                         $chaine .= ",";
                     }
-                    $chaine .= '"' . $dataName . '":' . json_encode($parameterArray);
+                    $chaine .= '"' . $dataName . '":' . json_encode($parameterArray, JSON_THROW_ON_ERROR);
                     $dataName = "";
                 }
                 if (strlen($chaine) != 1) {
@@ -519,7 +463,7 @@ class Mercanet
             if (strlen($chaine) != 1) {
                 $chaine .= ",";
             }
-            $chaine .= '"' . $dataName . '":' . json_encode($parameterArray);
+            $chaine .= '"' . $dataName . '":' . json_encode($parameterArray, JSON_THROW_ON_ERROR);
         }
 
         $chaine .= ',"seal" : "' . $this->getShaSign() . '" }';
@@ -567,10 +511,10 @@ class Mercanet
     // -----------------------------------
 
     /** @var string */
-    const SHASIGN_FIELD = "SEAL";
+    public const SHASIGN_FIELD = "SEAL";
 
     /** @var string */
-    const DATA_FIELD = "DATA";
+    public const DATA_FIELD = "DATA";
 
     public function setResponse(array $httpRequest)
     {
@@ -597,7 +541,6 @@ class Mercanet
 
     /**
      * Filter http request parameters
-     * @param array $httpRequest
      * @return array
      */
     private function filterRequestParameters(array $httpRequest)
@@ -606,7 +549,7 @@ class Mercanet
         if (!array_key_exists(self::DATA_FIELD, $httpRequest) || $httpRequest[self::DATA_FIELD] == '') {
             throw new \InvalidArgumentException('Data parameter not present in parameters.');
         }
-        $parameters = array();
+        $parameters = [];
         $this->responseData = $httpRequest[self::DATA_FIELD];
         $dataString = $httpRequest[self::DATA_FIELD];
         $this->dataString = $dataString;
@@ -653,10 +596,11 @@ class Mercanet
 
     function getXmlValueByTag($inXmlset, $needle)
     {
+        $tagValue = null;
         $resource = xml_parser_create();//Create an XML parser
         xml_parse_into_struct($resource, $inXmlset, $outArray);// Parse XML data into an array structure
         xml_parser_free($resource);//Free an XML parser
-        for ($i = 0; $i < count($outArray); $i++) {
+        for ($i = 0; $i < (is_countable($outArray) ? count($outArray) : 0); $i++) {
             if ($outArray[$i]['tag'] == strtoupper($needle)) {
                 $tagValue = $outArray[$i]['value'];
             }
@@ -688,7 +632,7 @@ class Mercanet
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->toParameterString());
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept:application/json'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Accept:application/json']);
         curl_setopt($ch, CURLOPT_PORT, 443);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         $result = curl_exec($ch); // $this->responseRequest et 	$this->responseStatus = false;
@@ -713,7 +657,7 @@ class Mercanet
             Print "service did not sent back data\n";
             die();
         }
-        $result_array = json_decode($result);
+        $result_array = json_decode($result, null, 512, JSON_THROW_ON_ERROR);
 
         if ($result_array->redirectionStatusCode == "00" ) {
 

@@ -19,57 +19,6 @@ use Payum\Core\Reply\HttpResponse;
 final class SimplePayment
 {
     /**
-     * @var Etransactions|object
-     */
-    private $etransactions;
-
-    /**
-     * @var string
-     */
-    private $rang;
-
-    /**
-     * @var string
-     */
-    private $identifiant;
-
-    /**
-     * @var string
-     */
-    private $site;
-
-    /**
-     * @var bool
-     */
-    private $sandbox;
-
-    /**
-     * @var string
-     */
-    private $amount;
-
-    /**
-     * @var string
-     */
-    private $currency;
-
-    /**
-     * @var string
-     */
-    private $transactionReference;
-
-    /**
-     * @var string
-     */
-    private $customerEmail;
-
-    /**
-     * @var string
-     */
-    private $automaticResponseUrl;
-
-    /**
-     * @param Etransactions $etransactions
      * @param $identifiant
      * @param $rang
      * @param $amount
@@ -78,32 +27,31 @@ final class SimplePayment
      * @param $transactionReference
      * @param $customerEmail
      * @param $automaticResponseUrl
+     * @param string $rang
+     * @param string $identifiant
+     * @param string $site
+     * @param bool $sandbox
+     * @param string $amount
+     * @param string $currency
+     * @param string $transactionReference
+     * @param string $customerEmail
+     * @param string $automaticResponseUrl
      */
     public function __construct(
-        Etransactions $etransactions,
-        $identifiant,
-        $rang,
-        $site,
-        $sandbox,
-        $amount,
+        private Etransactions $etransactions,
+        private $identifiant,
+        private $rang,
+        private $site,
+        private $sandbox,
+        private $amount,
         $targetUrl,
-        $currency,
-        $transactionReference,
-        $customerEmail,
-        $automaticResponseUrl
+        private $currency,
+        private $transactionReference,
+        private $customerEmail,
+        private $automaticResponseUrl
     )
     {
-        $this->automaticResponseUrl = $automaticResponseUrl;
-        $this->transactionReference = $transactionReference;
-        $this->etransactions = $etransactions;
-        $this->rang = $rang;
-        $this->site = $site;
-        $this->sandbox = $sandbox;
-        $this->identifiant = $identifiant;
-        $this->amount = $amount;
-        $this->currency = $currency;
         $this->targetUrl = $targetUrl;
-        $this->customerEmail = $customerEmail;
     }
 
     public function execute()

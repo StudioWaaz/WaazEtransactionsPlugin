@@ -23,17 +23,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 final class StatusAction implements ActionInterface
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @param RequestStack $requestStack
-     */
-    public function __construct(RequestStack $requestStack)
+    public function __construct(private RequestStack $requestStack)
     {
-        $this->requestStack = $requestStack;
     }
 
     /**
@@ -49,9 +40,9 @@ final class StatusAction implements ActionInterface
 
         $requestCurrent = $this->requestStack->getCurrentRequest();
 
-        $transactionReference = isset($model['transactionReference']) ? $model['transactionReference'] : null;
+        $transactionReference = $model['transactionReference'] ?? null;
 
-        $status = isset($model['status']) ? $model['status'] : null;
+        $status = $model['status'] ?? null;
 
         if ((null === $transactionReference) && !$requestCurrent->isMethod('POST')) {
 

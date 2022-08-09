@@ -14,73 +14,27 @@ use Payum\Core\Reply\HttpPostRedirect;
  */
 class Etransactions
 {
-    const TEST = "https://preprod-tpeweb.e-transactions.fr/cgi/MYchoix_pagepaiement.cgi";
-    const PRODUCTION = "https://tpeweb.e-transactions.fr/cgi/MYchoix_pagepaiement.cgi";
+    public const TEST = "https://preprod-tpeweb.e-transactions.fr/cgi/MYchoix_pagepaiement.cgi";
+    public const PRODUCTION = "https://tpeweb.e-transactions.fr/cgi/MYchoix_pagepaiement.cgi";
 
-    const INTERFACE_VERSION = "IR_WS_2.17";
-    const INSTALMENT = "INSTALMENT";
+    public const INTERFACE_VERSION = "IR_WS_2.17";
+    public const INSTALMENT = "INSTALMENT";
 
     // BYPASS3DS
-    const BYPASS3DS_ALL = "ALL";
-    const BYPASS3DS_MERCHANTWALLET = "MERCHANTWALLET";
+    public const BYPASS3DS_ALL = "ALL";
+    public const BYPASS3DS_MERCHANTWALLET = "MERCHANTWALLET";
 
-    private $brandsmap = array(
-        'ACCEPTGIRO' => 'CREDIT_TRANSFER',
-        'AMEX' => 'CARD',
-        'BCMC' => 'CARD',
-        'BUYSTER' => 'CARD',
-        'BANK CARD' => 'CARD',
-        'CB' => 'CARD',
-        'IDEAL' => 'CREDIT_TRANSFER',
-        'INCASSO' => 'DIRECT_DEBIT',
-        'MAESTRO' => 'CARD',
-        'MASTERCARD' => 'CARD',
-        'MASTERPASS' => 'CARD',
-        'MINITIX' => 'OTHER',
-        'NETBANKING' => 'CREDIT_TRANSFER',
-        'PAYPAL' => 'CARD',
-        'PAYLIB' => 'CARD',
-        'REFUND' => 'OTHER',
-        'SDD' => 'DIRECT_DEBIT',
-        'SOFORT' => 'CREDIT_TRANSFER',
-        'VISA' => 'CARD',
-        'VPAY' => 'CARD',
-        'VISA ELECTRON' => 'CARD',
-        'CBCONLINE' => 'CREDIT_TRANSFER',
-        'KBCONLINE' => 'CREDIT_TRANSFER'
-    );
-
-    /** @var ShaComposer */
-    private $hmac;
+    private array $brandsmap = ['ACCEPTGIRO' => 'CREDIT_TRANSFER', 'AMEX' => 'CARD', 'BCMC' => 'CARD', 'BUYSTER' => 'CARD', 'BANK CARD' => 'CARD', 'CB' => 'CARD', 'IDEAL' => 'CREDIT_TRANSFER', 'INCASSO' => 'DIRECT_DEBIT', 'MAESTRO' => 'CARD', 'MASTERCARD' => 'CARD', 'MASTERPASS' => 'CARD', 'MINITIX' => 'OTHER', 'NETBANKING' => 'CREDIT_TRANSFER', 'PAYPAL' => 'CARD', 'PAYLIB' => 'CARD', 'REFUND' => 'OTHER', 'SDD' => 'DIRECT_DEBIT', 'SOFORT' => 'CREDIT_TRANSFER', 'VISA' => 'CARD', 'VPAY' => 'CARD', 'VISA ELECTRON' => 'CARD', 'CBCONLINE' => 'CREDIT_TRANSFER', 'KBCONLINE' => 'CREDIT_TRANSFER'];
 
     private $pspURL = self::TEST;
 
     private $responseData;
 
-    private $parameters = array();
+    private array $parameters = [];
 
-    private $pspFields = array(
-        'amount', 'cardExpiryDate', 'cardNumber', 'cardCSCValue',
-        'currencyCode', 'merchantId', 'interfaceVersion', 'sealAlgorithm',
-        'transactionReference', 'keyVersion', 'paymentMeanBrand', 'customerLanguage',
-        'billingAddress.city', 'billingAddress.company', 'billingAddress.country',
-        'billingAddress', 'billingAddress.postBox', 'billingAddress.state',
-        'billingAddress.street', 'billingAddress.streetNumber', 'billingAddress.zipCode',
-        'billingContact.email', 'billingContact.firstname', 'billingContact.gender',
-        'billingContact.lastname', 'billingContact.mobile', 'billingContact.phone',
-        'customerAddress', 'customerAddress.city', 'customerAddress.company',
-        'customerAddress.country', 'customerAddress.postBox', 'customerAddress.state',
-        'customerAddress.street', 'customerAddress.streetNumber', 'customerAddress.zipCode',
-        'customerEmail', 'customerContact', 'customerContact.email', 'customerContact.firstname',
-        'customerContact.gender', 'customerContact.lastname', 'customerContact.mobile',
-        'customerContact.phone', 'customerContact.title', 'expirationDate', 'automaticResponseUrl',
-        'templateName', 'paymentMeanBrandList', 'instalmentData.number', 'instalmentData.datesList',
-        'instalmentData.transactionReferencesList', 'instalmentData.amountsList', 'paymentPattern',
-        'captureDay', 'captureMode', 'merchantTransactionDateTime', 'fraudData.bypass3DS', 'seal',
-        'orderChannel', 'orderId', 'returnContext', 'transactionOrigin', 'merchantWalletId', 'paymentMeanId'
-    );
+    private array $pspFields = ['amount', 'cardExpiryDate', 'cardNumber', 'cardCSCValue', 'currencyCode', 'merchantId', 'interfaceVersion', 'sealAlgorithm', 'transactionReference', 'keyVersion', 'paymentMeanBrand', 'customerLanguage', 'billingAddress.city', 'billingAddress.company', 'billingAddress.country', 'billingAddress', 'billingAddress.postBox', 'billingAddress.state', 'billingAddress.street', 'billingAddress.streetNumber', 'billingAddress.zipCode', 'billingContact.email', 'billingContact.firstname', 'billingContact.gender', 'billingContact.lastname', 'billingContact.mobile', 'billingContact.phone', 'customerAddress', 'customerAddress.city', 'customerAddress.company', 'customerAddress.country', 'customerAddress.postBox', 'customerAddress.state', 'customerAddress.street', 'customerAddress.streetNumber', 'customerAddress.zipCode', 'customerEmail', 'customerContact', 'customerContact.email', 'customerContact.firstname', 'customerContact.gender', 'customerContact.lastname', 'customerContact.mobile', 'customerContact.phone', 'customerContact.title', 'expirationDate', 'automaticResponseUrl', 'templateName', 'paymentMeanBrandList', 'instalmentData.number', 'instalmentData.datesList', 'instalmentData.transactionReferencesList', 'instalmentData.amountsList', 'paymentPattern', 'captureDay', 'captureMode', 'merchantTransactionDateTime', 'fraudData.bypass3DS', 'seal', 'orderChannel', 'orderId', 'returnContext', 'transactionOrigin', 'merchantWalletId', 'paymentMeanId'];
 
-    private $requiredFields = [
+    private array $requiredFields = [
         PayBoxRequestParams::PBX_SITE,
         PayBoxRequestParams::PBX_RANG,
         PayBoxRequestParams::PBX_IDENTIFIANT,
@@ -95,18 +49,9 @@ class Etransactions
     ];
 
 
-    public $allowedlanguages = array(
-        'nl', 'fr', 'de', 'it', 'es', 'cy', 'en'
-    );
+    public $allowedlanguages = ['nl', 'fr', 'de', 'it', 'es', 'cy', 'en'];
 
-    private static $currencies = array(
-        'EUR' => '978', 'USD' => '840', 'CHF' => '756', 'GBP' => '826',
-        'CAD' => '124', 'JPY' => '392', 'MXP' => '484', 'TRY' => '949',
-        'AUD' => '036', 'NZD' => '554', 'NOK' => '578', 'BRC' => '986',
-        'ARP' => '032', 'KHR' => '116', 'TWD' => '901', 'SEK' => '752',
-        'DKK' => '208', 'KRW' => '410', 'SGD' => '702', 'XPF' => '953',
-        'XOF' => '952'
-    );
+    private static array $currencies = ['EUR' => '978', 'USD' => '840', 'CHF' => '756', 'GBP' => '826', 'CAD' => '124', 'JPY' => '392', 'MXP' => '484', 'TRY' => '949', 'AUD' => '036', 'NZD' => '554', 'NOK' => '578', 'BRC' => '986', 'ARP' => '032', 'KHR' => '116', 'TWD' => '901', 'SEK' => '752', 'DKK' => '208', 'KRW' => '410', 'SGD' => '702', 'XPF' => '953', 'XOF' => '952'];
 
     public static function convertCurrencyToCurrencyCode($currency)
     {
@@ -127,9 +72,11 @@ class Etransactions
         return self::$currencies;
     }
 
-    public function __construct($hmac)
+    /**
+     * @param ShaComposer $hmac
+     */
+    public function __construct(private $hmac)
     {
-        $this->hmac = $hmac;
     }
 
     /** @return string */
@@ -494,15 +441,12 @@ class Etransactions
     // -----------------------------------
 
     /** @var string */
-    const SHASIGN_FIELD = "SEAL";
+    public const SHASIGN_FIELD = "SEAL";
 
     /** @var string */
-    const DATA_FIELD = "DATA";
+    public const DATA_FIELD = "DATA";
 
-    /**
-     * @var string
-     */
-    private $shaSign;
+    private ?string $shaSign = null;
 
     private $dataString;
 
@@ -512,7 +456,6 @@ class Etransactions
 
     /**
      * Filter http request parameters
-     * @param array $httpRequest
      * @return array
      */
     private function filterRequestParameters(array $httpRequest)
@@ -521,7 +464,7 @@ class Etransactions
         if (!array_key_exists(self::DATA_FIELD, $httpRequest) || $httpRequest[self::DATA_FIELD] == '') {
             throw new \InvalidArgumentException('Data parameter not present in parameters.');
         }
-        $parameters = array();
+        $parameters = [];
         $this->responseData = $httpRequest[self::DATA_FIELD];
         $dataString = $httpRequest[self::DATA_FIELD];
         $this->dataString = $dataString;
@@ -555,7 +498,7 @@ class Etransactions
     public function isValid($post_data, $ip)
     {
         $ip = str_replace('::ffff:', '', $ip); //ipv4 format
-        if ($post_data['error_code'] == '00000' && in_array($ip, array('195.101.99.73', '195.101.99.76', '194.2.160.69', '194.2.160.76', '195.25.7.158', '195.25.7.149', '194.2.122.158', '194.2.122.190', '195.101.99.76', '195.25.67.22', '195.25.7.166', '195.101.99.67', '194.2.160.81', '194.2.160.89', '195.25.67.9', '195.25.67.1', '195.25.7.145', '194.2.160.90', '195.25.67.10')))
+        if ($post_data['error_code'] == '00000' && in_array($ip, ['195.101.99.73', '195.101.99.76', '194.2.160.69', '194.2.160.76', '195.25.7.158', '195.25.7.149', '194.2.122.158', '194.2.122.190', '195.101.99.76', '195.25.67.22', '195.25.7.166', '195.101.99.67', '194.2.160.81', '194.2.160.89', '195.25.67.9', '195.25.67.1', '195.25.7.145', '194.2.160.90', '195.25.67.10']))
         {
           return true;
         }
@@ -565,10 +508,11 @@ class Etransactions
 
     function getXmlValueByTag($inXmlset, $needle)
     {
+        $tagValue = null;
         $resource = xml_parser_create();//Create an XML parser
         xml_parse_into_struct($resource, $inXmlset, $outArray);// Parse XML data into an array structure
         xml_parser_free($resource);//Free an XML parser
-        for ($i = 0; $i < count($outArray); $i++) {
+        for ($i = 0; $i < (is_countable($outArray) ? count($outArray) : 0); $i++) {
             if ($outArray[$i]['tag'] == strtoupper($needle)) {
                 $tagValue = $outArray[$i]['value'];
             }
@@ -608,13 +552,12 @@ class Etransactions
     /**
      * Makes an array of parameters become a querystring like string.
      *
-     * @param  array $array
      *
      * @return string
      */
     static public function stringify(array $array)
     {
-        $result = array();
+        $result = [];
         foreach ($array as $key => $value) {
             $result[] = sprintf('%s=%s', $key, $value);
         }

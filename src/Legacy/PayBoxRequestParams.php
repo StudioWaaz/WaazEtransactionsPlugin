@@ -12,85 +12,85 @@ interface PayBoxRequestParams {
     /**
      * Paybox Site param.
      */
-    const PBX_SITE = "PBX_SITE";
+    public const PBX_SITE = "PBX_SITE";
 
     /**
      * Paybox rang param.
      */
-    const PBX_RANG = "PBX_RANG";
+    public const PBX_RANG = "PBX_RANG";
 
     /**
      * Paybox identifiant param.
      */
-    const PBX_IDENTIFIANT = "PBX_IDENTIFIANT";
+    public const PBX_IDENTIFIANT = "PBX_IDENTIFIANT";
 
     /**
      * Paybox hash param.
      */
-    const PBX_HASH = "PBX_HASH";
+    public const PBX_HASH = "PBX_HASH";
 
     /**
      * Paybox code retour param.
      */
-    const PBX_RETOUR = "PBX_RETOUR";
+    public const PBX_RETOUR = "PBX_RETOUR";
 
     /**
      * Paybox hmac param.
      */
-    const PBX_HMAC = "PBX_HMAC";
+    public const PBX_HMAC = "PBX_HMAC";
 
     /**
      * Paybox payment type param.
      */
-    const PBX_TYPEPAIEMENT = "PBX_TYPEPAIEMENT";
+    public const PBX_TYPEPAIEMENT = "PBX_TYPEPAIEMENT";
 
     /**
      * Paybox card type param.
      */
-    const PBX_TYPECARTE = "PBX_TYPECARTE";
+    public const PBX_TYPECARTE = "PBX_TYPECARTE";
 
     /**
      * Paybox total param.
      */
-    const PBX_TOTAL = "PBX_TOTAL";
+    public const PBX_TOTAL = "PBX_TOTAL";
 
     /**
      * Paybox devise param.
      */
-    const PBX_DEVISE = "PBX_DEVISE";
+    public const PBX_DEVISE = "PBX_DEVISE";
 
     /**
      * Paybox order number param.
      */
-    const PBX_CMD = "PBX_CMD";
+    public const PBX_CMD = "PBX_CMD";
 
     /**
      * Paybox porteur param.
      */
-    const PBX_PORTEUR = "PBX_PORTEUR";
+    public const PBX_PORTEUR = "PBX_PORTEUR";
 
     /**
      * Paybox redirect url when payment done.
      */
-    const PBX_EFFECTUE = "PBX_EFFECTUE";
+    public const PBX_EFFECTUE = "PBX_EFFECTUE";
 
     /**
      * Paybox redirect url when payment canceled.
      */
-    const PBX_ANNULE = "PBX_ANNULE";
+    public const PBX_ANNULE = "PBX_ANNULE";
 
     /**
      * Paybox redirect url when payment refused.
      */
-    const PBX_REFUSE = "PBX_REFUSE";
+    public const PBX_REFUSE = "PBX_REFUSE";
 
     /**
      * Paybox autoresponse url.
      */
-    const PBX_REPONDRE_A = "PBX_REPONDRE_A";
+    public const PBX_REPONDRE_A = "PBX_REPONDRE_A";
 
     /**
      * Paybox time param.
      */
-    const PBX_TIME = "PBX_TIME";
+    public const PBX_TIME = "PBX_TIME";
 }

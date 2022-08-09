@@ -18,17 +18,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 final class EtransactionsBridge implements EtransactionsBridgeInterface
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @param RequestStack $requestStack
-     */
-    public function __construct(RequestStack $requestStack)
+    public function __construct(private RequestStack $requestStack)
     {
-        $this->requestStack = $requestStack;
     }
 
     /**

@@ -13,45 +13,24 @@ class Etransactions
     /**
      * Primary server.
      */
-    const MAIN_SERVER = "tpeweb.e-transactions.fr/cgi/MYchoix_pagepaiement.cgi";
+    public const MAIN_SERVER = "tpeweb.e-transactions.fr/cgi/MYchoix_pagepaiement.cgi";
 
     /**
      * Backup server.
      */
-    const BACKUP_SERVER = "tpeweb1.e-transactions.fr/cgi/MYchoix_pagepaiement.cgi";
+    public const BACKUP_SERVER = "tpeweb1.e-transactions.fr/cgi/MYchoix_pagepaiement.cgi";
 
     /**
      * Sandbox server.
      */
-    const SANDBOX_SERVER = "preprod-tpeweb.e-transactions.fr/cgi/MYchoix_pagepaiement.cgi";
+    public const SANDBOX_SERVER = "preprod-tpeweb.e-transactions.fr/cgi/MYchoix_pagepaiement.cgi";
 
     /**
-     * @var HttpClientInterface
-     */
-    protected $client;
-
-    /**
-     * @var MessageFactory
-     */
-    protected $messageFactory;
-
-    /**
-     * @var array
-     */
-    protected $options = [];
-
-    /**
-     * @param array               $options
-     * @param HttpClientInterface $client
-     * @param MessageFactory      $messageFactory
      *
      * @throws \Payum\Core\Exception\InvalidArgumentException if an option is invalid
      */
-    public function __construct(array $options, HttpClientInterface $client, MessageFactory $messageFactory)
+    public function __construct(protected array $options, protected HttpClientInterface $client, protected MessageFactory $messageFactory)
     {
-        $this->options = $options;
-        $this->client = $client;
-        $this->messageFactory = $messageFactory;
     }
 
 
@@ -71,8 +50,6 @@ class Etransactions
     }
 
     /**
-     * @param array $fields
-     *
      * @return array
      */
     protected function doRequest($method, array $fields)
@@ -97,11 +74,11 @@ class Etransactions
      */
     protected function getApiEndpoint()
     {
-        $servers = array();
+        $servers = [];
         if ($this->options['sandbox']) {
             $servers[] = self::SANDBOX_SERVER;
         } else {
-            $servers = array(self::MAIN_SERVER, self::BACKUP_SERVER);
+            $servers = [self::MAIN_SERVER, self::BACKUP_SERVER];
         }
 
         foreach ($servers as $server) {
@@ -145,13 +122,12 @@ class Etransactions
     /**
      * Makes an array of parameters become a querystring like string.
      *
-     * @param  array $array
      *
      * @return string
      */
     static public function stringify(array $array)
     {
-        $result = array();
+        $result = [];
         foreach ($array as $key => $value) {
             $result[] = sprintf('%s=%s', $key, $value);
         }
