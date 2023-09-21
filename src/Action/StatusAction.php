@@ -23,8 +23,17 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 final class StatusAction implements ActionInterface
 {
-    public function __construct(private RequestStack $requestStack)
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @param RequestStack $requestStack
+     */
+    public function __construct(RequestStack $requestStack)
     {
+        $this->requestStack = $requestStack;
     }
 
     /**

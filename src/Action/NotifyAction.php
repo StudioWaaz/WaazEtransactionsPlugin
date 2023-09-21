@@ -29,10 +29,29 @@ final class NotifyAction implements ActionInterface, ApiAwareInterface
 {
     use GatewayAwareTrait;
 
-    private array $api = [];
+    private $api = [];
 
-    public function __construct(private EtransactionsBridgeInterface $etransactionsBridge, private FactoryInterface $stateMachineFactory)
+    /**
+     * @var EtransactionsBridgeInterface
+     */
+    private $etransactionsBridge;
+
+    /**
+     * @var FactoryInterface
+     */
+    private $stateMachineFactory;
+
+    /**
+     * @param EtransactionsBridgeInterface $etransactionsBridge
+     * @param FactoryInterface $stateMachineFactory
+     */
+    public function __construct(
+        EtransactionsBridgeInterface $etransactionsBridge,
+        FactoryInterface $stateMachineFactory
+    )
     {
+        $this->etransactionsBridge = $etransactionsBridge;
+        $this->stateMachineFactory = $stateMachineFactory;
     }
 
     /**

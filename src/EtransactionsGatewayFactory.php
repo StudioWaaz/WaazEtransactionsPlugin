@@ -21,9 +21,19 @@ class EtransactionsGatewayFactory extends GatewayFactory
         ]);
 
         if (false == $config['payum.api']) {
-            $config['payum.default_options'] = ['site' => '', 'rang' => '', 'identifiant' => '', 'hmac' => '', 'hash' => 'SHA512', 'retour' => 'Mt:M;Ref:R;Auto:A;error_code:E', 'sandbox' => false, 'type_paiement' => '', 'type_carte' => ''];
+            $config['payum.default_options'] = array(
+                'site' => '',
+                'rang' => '',
+                'identifiant' => '',
+                'hmac' => '',
+                'hash' => 'SHA512',
+                'retour' => 'Mt:M;Ref:R;Auto:A;error_code:E',
+                'sandbox' => false,
+                'type_paiement' => '',
+                'type_carte' => ''
+            );
             $config->defaults($config['payum.default_options']);
-            $config['payum.required_options'] = ['site', 'rang', 'identifiant', 'hmac'];
+            $config['payum.required_options'] = array('site', 'rang', 'identifiant', 'hmac');
 
             // $config['payum.api'] = function (ArrayObject $config) {
             //     $config->validateNotEmpty($config['payum.required_options']);

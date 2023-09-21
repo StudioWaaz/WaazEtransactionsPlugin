@@ -18,8 +18,17 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 final class EtransactionsBridge implements EtransactionsBridgeInterface
 {
-    public function __construct(private RequestStack $requestStack)
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @param RequestStack $requestStack
+     */
+    public function __construct(RequestStack $requestStack)
     {
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -61,5 +70,15 @@ final class EtransactionsBridge implements EtransactionsBridgeInterface
         $currentRequest = $this->requestStack->getCurrentRequest();
 
         return $currentRequest->isMethod('GET');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isPostMethod()
+    {
+        $currentRequest = $this->requestStack->getCurrentRequest();
+
+        return $currentRequest->isMethod('POST');
     }
 }
