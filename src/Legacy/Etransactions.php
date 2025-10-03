@@ -658,16 +658,49 @@ class Etransactions
         $this->parameters[PayBoxRequestParams::PBX_BILLING] = $this->getXmlBilling($billingInfo);
     }
 
+    /**
+     * Format text for bank module requirements
+     * @param string $value
+     * @param int $maxLength
+     * @return string
+     */
+    private function formatage($value, $maxLength)
+    {
+        // Convert to uppercase and remove accents
+        if (class_exists('Transliterator')) {
+            $value = strtoupper(\Transliterator::create('NFD; [:Nonspacing Mark:] Remove; NFC')->transliterate($value));
+        } else {
+            // Fallback if Transliterator is not available
+            $value = strtoupper($value);
+            $value = str_replace(
+                ['À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'Ç', 'Ñ'],
+                ['A', 'A', 'A', 'A', 'A', 'A', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'C', 'N'],
+                $value
+            );
+        }
+
+        // Remove non-alphanumeric characters except spaces
+        $value = preg_replace('/[^A-Z0-9\s]/', '', $value);
+
+        // Normalize multiple spaces to single spaces
+        $value = preg_replace('/\s+/', ' ', $value);
+
+        // Truncate to maximum length
+        $value = substr($value, 0, $maxLength);
+
+        return trim($value);
+    }
+
     private function getXmlBilling(array $billing)
     {
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>';
+        $xml = '<?xml version="1.0" encoding="utf-8"?>';
         $xml .= '<Billing>';
         $xml .= '<Address>';
-        $xml .= '<FirstName>' . $billing['firstName'] . '</FirstName>';
-        $xml .= '<LastName>' . $billing['lastName'] . '</LastName>';
-        $xml .= '<Address1>' . $billing['address1'] . '</Address1>';
-        $xml .= '<ZipCode>' . $billing['zipCode'] . '</ZipCode>';
-        $xml .= '<City>' . $billing['city'] . '</City>';
+        $xml .= '<FirstName>' . $this->formatage($billing['firstName'] ?? '', 22) . '</FirstName>';
+        $xml .= '<LastName>' . $this->formatage($billing['lastName'] ?? '', 22) . '</LastName>';
+        $xml .= '<Address1>' . $this->formatage($billing['address1'] ?? '', 50) . '</Address1>';
+        $xml .= '<ZipCode>' . $this->formatage($billing['zipCode'] ?? '', 16) . '</ZipCode>';
+        $xml .= '<City>' . $this->formatage($billing['city'] ?? '', 50) . '</City>';
         $xml .= '<CountryCode>' . $billing['countryCode'] . '</CountryCode>';
         $xml .= '</Address>';
         $xml .= '</Billing>';
