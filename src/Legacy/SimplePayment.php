@@ -62,6 +62,11 @@ final class SimplePayment
     /**
      * @var string
      */
+    private $targetUrl;
+
+    /**
+     * @var string
+     */
     private $customerEmail;
 
     /**
@@ -74,7 +79,7 @@ final class SimplePayment
      */
     private $order;
 
-    protected static array $countries = [
+    protected static $countries = [
         ["alpha2" => "AF", "alpha3" => "AFG", "numeric" => "004"],
         ["alpha2" => "AL", "alpha3" => "ALB", "numeric" => "008"],
         ["alpha2" => "DZ", "alpha3" => "DZA", "numeric" => "012"],
@@ -328,14 +333,16 @@ final class SimplePayment
 
     /**
      * @param Etransactions $etransactions
-     * @param $identifiant
-     * @param $rang
-     * @param $amount
-     * @param $targetUrl
-     * @param $currency
-     * @param $transactionReference
-     * @param $customerEmail
-     * @param $automaticResponseUrl
+     * @param string $identifiant
+     * @param string $rang
+     * @param string $site
+     * @param bool $sandbox
+     * @param string $amount
+     * @param string $targetUrl
+     * @param string $currency
+     * @param string $transactionReference
+     * @param string $customerEmail
+     * @param string $automaticResponseUrl
      * @param OrderInterface $order
      */
     public function __construct(
